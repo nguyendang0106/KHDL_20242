@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+tensorflow
+opencv-python-headless
+numpy
+python-multipart
+aiofiles
+ngrok

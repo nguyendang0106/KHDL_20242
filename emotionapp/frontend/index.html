@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="interactive-background"></canvas> <!-- Wallpaper Canvas -->
+
+    <div class="container"> <!-- Main content wrapper -->
+        <header>
+            <div class="logo">EmotionAI</div>
+            <button id="theme-toggle-btn" class="btn btn-icon btn-theme-toggle">
+                <!-- Icon and text will be set by JS -->
+            </button>
+        </header>
+
+        <main id="main-content">
+            <!-- Page 1: Landing Page -->
+            <section id="page-landing" class="page active">
+                <div class="page-content">
+                    <h1 class="main-title">Emotion Recognition AI</h1>
+                    <p class="subtitle">Uncover emotions in real-time or from video footage.</p>
+                    <div class="navigation-buttons">
+                        <button class="btn btn-primary btn-icon" data-targetpage="page-webcam">
+                            <i class="fas fa-camera"></i> Recognize from Webcam
+                        </button>
+                        <button class="btn btn-secondary btn-icon" data-targetpage="page-video-upload">
+                            <i class="fas fa-video"></i> Recognize from Video
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Page 2: Recognize from Webcam -->
+            <section id="page-webcam" class="page">
+                <div class="page-content">
+                    <div class="page-header-controls">
+                        <button class="btn btn-back btn-icon" data-targetpage="page-landing"><i class="fas fa-arrow-left"></i> Back to Home</button>
+                        <h2>Real-time Webcam Emotion Detection</h2>
+                    </div>
+                    <div class="controls-webcam">
+                        <button id="startWebcamBtn" class="btn btn-success btn-icon"><i class="fas fa-play-circle"></i> Start Webcam</button>
+                        <button id="stopWebcamBtn" class="btn btn-danger btn-icon" style="display:none;"><i class="fas fa-stop-circle"></i> Stop Webcam</button>
+                    </div>
+                    <div class="webcam-feed-container">
+                        <video id="webcamVideoFeed" autoplay playsinline muted></video>
+                        <canvas id="webcamOverlayCanvas"></canvas>
+                    </div>
+                    <p id="webcamStatusMessage" class="status-text">Webcam is off.</p>
+                </div>
+            </section>
+
+            <!-- Page 3: Recognize from Video -->
+            <section id="page-video-upload" class="page">
+                <div class="page-content">
+                     <div class="page-header-controls">
+                        <button class="btn btn-back btn-icon" data-targetpage="page-landing"><i class="fas fa-arrow-left"></i> Back to Home</button>
+                        <h2>Video File Emotion Detection</h2>
+                    </div>
+                    <div class="upload-area">
+                        <input type="file" id="videoFileInput" accept="video/mp4,video/avi,video/mov,video/webm" style="display: none;">
+                        <button id="selectVideoFileBtn" class="btn btn-primary btn-icon"><i class="fas fa-file-video"></i> Select Video File</button>
+                        <p id="selectedFileName">No file selected.</p>
+                    </div>
+                    <button id="processVideoBtn" class="btn btn-success btn-icon" disabled><i class="fas fa-cogs"></i> Upload and Process</button>
+                    
+                    <div id="videoUploadStatus" class="status-text" style="display:none;"></div>
+                    
+                    <div id="videoResultArea" style="display:none;">
+                        <h3>Processed Video:</h3>
+                        <video id="resultVideoPlayer" controls></video>
+                        <a id="downloadResultLink" href="#" download="processed_video.mp4" class="btn btn-download btn-icon" style="display:none;">
+                            <i class="fas fa-download"></i> Download Processed Video
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script> 
+    <script src="js/effects.js"></script>
+    <script src="js/webcam-module.js"></script>
+    <script src="js/video-module.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

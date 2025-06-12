@@ -1,0 +1,369 @@
+:root {
+    /* Dark Mode (Default) */
+    --primary-color-dark: #8A2BE2; /* Brighter Purple */
+    --secondary-color-dark: #4169E1; /* Royal Blue */
+    --accent-color-dark: #FF6347; /* Tomato Red */
+    --text-color-dark: #e0e0e0;
+    --text-light-dark: #f5f5f5; /* Lighter for headings */
+    --app-container-bg-dark: rgba(28, 28, 40, 0.9); /* Darker, slightly more opaque */
+    --header-bg-dark: rgba(22, 22, 30, 0.95);
+    --card-bg-dark: rgba(35, 35, 50, 0.85); /* For elements like upload area */
+    --border-color-dark: rgba(255, 255, 255, 0.12);
+    --canvas-bg-dark: #0a0a10; /* Very dark for particle background */
+    --success-color-dark: #32CD32; /* Lime Green */
+    --danger-color-dark: #FF4500; /* OrangeRed */
+    --disabled-btn-bg-dark: #4a4a5a;
+    --disabled-btn-text-dark: #888898;
+
+
+    /* Light Mode */
+    --primary-color-light: #6A0DAD; /* Purple */
+    --secondary-color-light: #007BFF; /* Standard Blue */
+    --accent-color-light: #DC143C; /* Crimson */
+    --text-color-light: #333333;
+    --text-light-light: #111111;
+    --app-container-bg-light: #ffffff;
+    --header-bg-light: #f8f9fa;
+    --card-bg-light: #f1f3f5;
+    --border-color-light: #ced4da;
+    --canvas-bg-light: #e9ecef; /* Light grey for particle background */
+    --success-color-light: #28a745;
+    --danger-color-light: #dc3545;
+    --disabled-btn-bg-light: #e0e0e0;
+    --disabled-btn-text-light: #9e9e9e;
+
+
+    /* Universal Variables - These will be switched by the body class */
+    --font-family: 'Poppins', sans-serif;
+    --current-primary-color: var(--primary-color-dark);
+    --current-secondary-color: var(--secondary-color-dark);
+    --current-accent-color: var(--accent-color-dark);
+    --current-text-color: var(--text-color-dark);
+    --current-text-light: var(--text-light-dark);
+    --current-app-container-bg: var(--app-container-bg-dark);
+    --current-header-bg: var(--header-bg-dark);
+    --current-card-bg: var(--card-bg-dark);
+    --current-border-color: var(--border-color-dark);
+    --current-canvas-bg: var(--canvas-bg-dark);
+    --current-success-color: var(--success-color-dark);
+    --current-danger-color: var(--danger-color-dark);
+    --current-disabled-btn-bg: var(--disabled-btn-bg-dark);
+    --current-disabled-btn-text: var(--disabled-btn-text-dark);
+}
+
+body.light-mode {
+    --current-primary-color: var(--primary-color-light);
+    --current-secondary-color: var(--secondary-color-light);
+    --current-accent-color: var(--accent-color-light);
+    --current-text-color: var(--text-color-light);
+    --current-text-light: var(--text-light-light);
+    --current-app-container-bg: var(--app-container-bg-light);
+    --current-header-bg: var(--header-bg-light);
+    --current-card-bg: var(--card-bg-light);
+    --current-border-color: var(--border-color-light);
+    --current-canvas-bg: var(--canvas-bg-light);
+    --current-success-color: var(--success-color-light);
+    --current-danger-color: var(--danger-color-light);
+    --current-disabled-btn-bg: var(--disabled-btn-bg-light);
+    --current-disabled-btn-text: var(--disabled-btn-text-light);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+   font-family: var(--font-family);
+    color: var(--current-text-color);
+    background-color: transparent; /* Body itself is transparent to show canvas */
+    overflow: hidden; /* Prevent scrollbars from body, .container handles scroll */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px; /* Small padding around the main container */
+    transition: color 0.3s ease;
+}
+
+
+#interactive-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Deepest background layer */
+}
+
+.container { /* Renamed from app-container for clarity, ensure HTML is updated if this name is used */
+    width: 100%;
+    max-width: 950px; /* Slightly wider */
+    min-height: calc(100vh - 30px); /* Use viewport height minus body padding */
+    max-height: calc(100vh - 30px);
+    background: var(--current-app-container-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 18px; /* Slightly less rounded */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--current-border-color);
+    position: relative;
+    z-index: 1;
+    overflow: hidden; /* Important for border-radius and children */
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 25px;
+    background-color: var(--current-header-bg);
+    color: var(--current-header-text);
+    border-bottom: 1px solid var(--current-border-color);
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.logo {
+    font-size: 1.6em;
+    font-weight: 600;
+    color: var(--current-primary-color);
+    transition: color 0.3s ease;
+}
+
+main#main-content {
+    flex-grow: 1;
+    overflow-y: auto; /* Allow scrolling for page content if it overflows */
+    position: relative; /* For page transitions */
+}
+
+.page {
+    display: none;
+    padding: 25px;
+    animation: pageFadeIn 0.4s ease-out;
+    height: 100%; /* Make page take full height of main-content */
+    overflow-y: auto; /* Scroll within page if needed */
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+.page-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Typography */
+.main-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--current-primary-color), var(--current-accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--current-text-color);
+    opacity: 0.8;
+    margin-bottom: 35px;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+h2 { /* For page titles like "Video File Emotion Detection" */
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--current-text-light);
+    text-align: left;
+    flex-grow: 1; /* Allow title to take space */
+    transition: color 0.3s ease;
+}
+
+h3 {
+    font-size: 1.3rem;
+    color: var(--current-text-light);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 22px;
+    font-size: 0.95rem;
+    font-weight: 500; /* Slightly less bold */
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+.btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-icon i {
+    font-size: 1.05em;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--current-primary-color), var(--current-secondary-color));
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--current-secondary-color);
+    border: 1.5px solid var(--current-secondary-color);
+}
+.btn-secondary:hover {
+    background-color: var(--current-secondary-color);
+    color: white;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.btn-back {
+    /* No longer absolute, part of .page-header-controls flex */
+    background-color: var(--current-card-bg); /* Use card bg for subtlety */
+    color: var(--current-text-color);
+    border: 1px solid var(--current-border-color);
+    padding: 8px 15px; /* Adjust as needed */
+}
+.btn-back:hover {
+    background-color: var(--current-border-color); /* Subtle hover */
+}
+
+
+.btn-success { background: var(--current-success-color); color: white; }
+.btn-danger { background: var(--current-danger-color); color: white; }
+.btn-download { background: var(--current-accent-color); color: white; }
+
+.btn:disabled {
+    background: var(--current-disabled-btn-bg) !important;
+    color: var(--current-disabled-btn-text) !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    border-color: var(--current-disabled-btn-bg) !important;
+}
+
+.btn-theme-toggle {
+    background-color: var(--current-card-bg);
+    color: var(--current-text-color);
+    border: 1px solid var(--current-border-color);
+}
+.btn-theme-toggle:hover {
+    background-color: var(--current-border-color);
+}
+
+
+/* Specific Component Styles */
+.controls-webcam, .upload-area {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--current-card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--current-border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.upload-area {
+    text-align: center;
+    border-style: dashed;
+}
+
+.webcam-feed-container {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 20px auto;
+    background-color: #000; /* Keep video background dark */
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--current-border-color);
+}
+
+#webcamVideoFeed, #webcamOverlayCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: scaleX(-1); /* Mirror mode */
+}
+#webcamOverlayCanvas { position: absolute; top: 0; left: 0; }
+
+#selectedFileName, .status-text {
+    font-size: 0.9rem;
+    color: var(--current-text-color);
+    opacity: 0.7;
+    margin-top: 10px;
+    min-height: 1.2em;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+#videoResultArea video {
+    width: 100%;
+    max-width: 520px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--current-border-color);
+    background-color: #000; /* Keep video background dark */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    .container {
+        min-height: calc(100vh - 20px);
+        max-height: calc(100vh - 20px);
+        border-radius: 12px;
+    }
+    header { padding: 15px 20px; }
+    .logo { font-size: 1.4em; }
+    .page { padding: 20px; }
+    .main-title { font-size: 2.2rem; }
+    .subtitle { font-size: 1rem; }
+    h2 { font-size: 1.5rem; }
+    .page-header-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .btn-back { align-self: flex-start; }
+    .navigation-buttons { flex-direction: column; gap: 12px; }
+    .btn { width: 100%; }
+}
+@media (max-width: 480px) {
+    .main-title { font-size: 1.9rem; }
+    h2 { font-size: 1.3rem; }
+}
