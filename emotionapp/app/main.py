@@ -11,6 +11,8 @@ import io
 from contextlib import asynccontextmanager
 
 from .processing import load_resources, predict_emotions_on_frame_data, draw_labels_on_frame
+from .datalogger import log_emotion_data
+
 
 # Configure basic logging
 logging.basicConfig(
@@ -75,6 +77,11 @@ async def predict_webcam_frame(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="Could not decode image from received data.")
 
         detections = predict_emotions_on_frame_data(frame)
+
+        # --- LOG THE DATA ---
+        log_emotion_data(source='webcam', detections=detections)
+        # --------------------
+
         labeled_frame = draw_labels_on_frame(frame.copy(), detections) # Use a copy
 
         # Encode the labeled frame to JPEG
@@ -150,6 +157,11 @@ async def predict_video_emotions(file: UploadFile = File(...)):
 
             if frame_count % PROCESS_EVERY_N_FRAMES == 0:
                 detections = predict_emotions_on_frame_data(frame)
+
+                # --- LOG THE DATA ---
+                log_emotion_data(source='video', detections=detections, video_filename=file.filename)
+                # --------------------
+                
                 last_detections = detections # Store for intermediate frames
                 current_detections_to_draw = detections
                 if frame_count % (PROCESS_EVERY_N_FRAMES * 10) == 0: # Log progress less frequently
